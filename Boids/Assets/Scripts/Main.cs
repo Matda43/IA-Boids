@@ -29,6 +29,11 @@ public class Main : MonoBehaviour
     GameObject[] boids;
 
 
+    /******************************/
+
+    const int CPT_MAX = 1000;
+    int cpt = 0;
+
     void Start()
     {
         this.boids = new GameObject[numBoids];
@@ -39,9 +44,40 @@ public class Main : MonoBehaviour
 
     void Update()
     {
-        
+        if (this.ctpIsPassed())
+        {
+            foreach(GameObject go in this.boids)
+            {
+                Boid b = go.GetComponent<Boid>();
+                //Vector3 new_velocity = b.getCurrentVelocity() * -1;
+                //b.setCurrentVelocity(new_velocity);
+
+
+                map.isInMap(b);
+                b.move();
+            }
+            resetCpt();
+        }
+        else
+        {
+            this.incCpt();
+        }
     }
 
+    void incCpt()
+    {
+        this.cpt++;
+    }
+
+    bool ctpIsPassed()
+    {
+        return this.cpt > CPT_MAX;
+    }
+
+    void resetCpt()
+    {
+        this.cpt = 0;
+    }
 
     void generateBoids(int numBoids, GameObject prefab, float maxVelocity)
     {
