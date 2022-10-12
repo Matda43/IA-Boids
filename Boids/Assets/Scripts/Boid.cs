@@ -84,9 +84,9 @@ public class Boid : MonoBehaviour
         return Mathf.Sqrt(Mathf.Pow(distance.x, 2) + Mathf.Pow(distance.y, 2) + Mathf.Pow(distance.z, 2));
     }
 
-    public void moveCloser(Boid[] boids)
+    public void moveCloser(List<Boid> boids, float param)
     {
-        if (boids.Length < 1)
+        if (boids.Count < 1)
             return;
 
         Vector3 avgs = Vector3.zero;
@@ -97,14 +97,14 @@ public class Boid : MonoBehaviour
                 avgs += this.transform.position - boid.transform.position;
             }
         }
-        avgs /= boids.Length;
-        Vector3 new_velocity = this.getCurrentVelocity() - avgs / 100;
+        avgs /= boids.Count;
+        Vector3 new_velocity = this.getCurrentVelocity() - avgs / param;
         this.setCurrentVelocity(new_velocity);
     }
 
-    public void moveWith(Boid[] boids)
+    public void moveWith(List<Boid> boids, float param)
     {
-        if (boids.Length < 1)
+        if (boids.Count < 1)
             return;
 
         Vector3 avgs = Vector3.zero;
@@ -112,14 +112,14 @@ public class Boid : MonoBehaviour
         {
             avgs += boid.getCurrentVelocity();
         }
-        avgs /= boids.Length;
-        Vector3 new_velocity = this.getCurrentVelocity() + avgs / 40;
+        avgs /= boids.Count;
+        Vector3 new_velocity = this.getCurrentVelocity() + avgs / param;
         this.setCurrentVelocity(new_velocity);
     }
 
-    public void moveAway(Boid[] boids, float minDistance)
+    public void moveAway(List<Boid> boids, float minDistance, float param)
     {
-        if (boids.Length < 1)
+        if (boids.Count < 1)
             return;
 
         Vector3 distances = Vector3.zero;
@@ -165,7 +165,7 @@ public class Boid : MonoBehaviour
         }
         if(numClose > 0)
         {
-            Vector3 new_velocity = this.getCurrentVelocity() - distances / 5;
+            Vector3 new_velocity = this.getCurrentVelocity() - distances / param;
             this.setCurrentVelocity(new_velocity);
         }
     }

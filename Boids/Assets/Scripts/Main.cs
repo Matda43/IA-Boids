@@ -23,6 +23,22 @@ public class Main : MonoBehaviour
 
     [Range(1f, 20f)]
     public float maxVelocity;
+    float maxVelocityRemember;
+
+    [Range(0f, 2f)]
+    public float weight;
+
+    [Range(1f, 100f)]
+    public float moveCloser;
+
+    [Range(1f, 100f)]
+    public float moveWith;
+
+    [Range(1f, 100f)]
+    public float moveAway;
+
+    [Range(1f, 20f)]
+    public float minDistance;
 
     public GameObject prefab;
 
@@ -39,6 +55,8 @@ public class Main : MonoBehaviour
         this.boids = new GameObject[numBoids];
         this.map = new Map(xAxisLenght, yAxisLenght, zAxisLenght, step, transform.position);
         generateBoids(numBoids, prefab, maxVelocity);
+
+        this.maxVelocityRemember = maxVelocity;
     }
 
 
@@ -46,11 +64,39 @@ public class Main : MonoBehaviour
     {
         if (this.ctpIsPassed())
         {
+            if (maxVelocityRemember != maxVelocity)
+            {
+                foreach (GameObject go in this.boids)
+                {
+                    Boid boid = go.GetComponent<Boid>();
+                    boid.setMaxVelocity(maxVelocityRemember);
+                    this.maxVelocityRemember = maxVelocity;
+                }
+            }
+
+
             foreach(GameObject go in this.boids)
             {
-                Boid b = go.GetComponent<Boid>();
-                map.isInMap(b);
-                b.move();
+                Boid boid = go.GetComponent<Boid>();
+                List<Boid> closeBoids = new List<Boid>();
+                foreach (GameObject otherGo in this.boids)
+                {
+                    if(otherGo != go)
+                    {
+                        Boid otherBoid = otherGo.GetComponent<Boid>();
+                        float distance = boid.distance(otherBoid);
+                        if(distance < 4)
+                        {
+                            closeBoids.Add(otherBoid);
+                        }
+                    }
+                }
+
+                boid.moveCloser(closeBoids, moveCloser);
+                boid.moveWith(closeBoids, moveWith);
+                boid.moveAway(closeBoids, minDistance, moveAway);
+                map.isInMap(boid, weight);
+                boid.move();
             }
             resetCpt();
         }

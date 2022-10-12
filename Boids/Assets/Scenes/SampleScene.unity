@@ -155,9 +155,14 @@ MonoBehaviour:
   xAxisLenght: 5
   yAxisLenght: 5
   zAxisLenght: 5
-  numBoids: 10
-  maxVelocity: 20
-  prefab: {fileID: 1136289587430574976, guid: 1a883614a2e1a3942bf39887305b4bac, type: 3}
+  numBoids: 100
+  maxVelocity: 4.1
+  weight: 2
+  moveCloser: 7
+  moveWith: 5
+  moveAway: 18
+  minDistance: 3
+  prefab: {fileID: 5861121452319409561, guid: 1a883614a2e1a3942bf39887305b4bac, type: 3}
 --- !u!4 &25821182
 Transform:
   m_ObjectHideFlags: 0

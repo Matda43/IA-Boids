@@ -44,9 +44,13 @@ public class Map
                 }
             }
         }
+        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        go.transform.position = new Vector3(this.center.x, - this.center.y - 1, this.center.z) - this.parentCenter;
+        go.transform.localScale = new Vector3(this.xAxisLenght, 1, this.zAxisLenght) * step;
+
     }
 
-    public void isInMap(Boid boid)
+    public void isInMap(Boid boid, float weight)
     {
         Vector3 position = boid.transform.position;
         Vector3 velocity = boid.getCurrentVelocity();
@@ -62,26 +66,26 @@ public class Map
 
         if (position.x < minPosition.x)
         {
-            new_velocity += new Vector3(1, ry, rz) * 0.5f;
+            new_velocity += new Vector3(1, ry, rz) * weight;
         }else if (position.x > maxPosition.x)
         {
-            new_velocity += new Vector3(-1, rx, rz) * 0.5f;
+            new_velocity += new Vector3(-1, rx, rz) * weight;
         }
 
         if (position.y < minPosition.y)
         {
-            new_velocity += new Vector3(rx, 1, rz) * 0.5f;
+            new_velocity += new Vector3(rx, 1, rz) * weight;
         }else if (position.y > maxPosition.y)
         {
-            new_velocity += new Vector3(rx, -1, rz) * 0.5f;
+            new_velocity += new Vector3(rx, -1, rz) * weight;
         }
 
         if (position.z < minPosition.z)
         {
-            new_velocity += new Vector3(rx, ry, 1) * 0.5f;
+            new_velocity += new Vector3(rx, ry, 1) * weight;
         }else if (position.z > maxPosition.z)
         {
-            new_velocity += new Vector3(rx, ry, -1) * 0.5f;
+            new_velocity += new Vector3(rx, ry, -1) * weight;
         }
         boid.setCurrentVelocity(velocity + new_velocity);
     }
