@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
-    [Range(1,20)]
+    [Range(1,100)]
     public int xAxisLenght;
 
-    [Range(1, 20)]
+    [Range(1, 100)]
     public int yAxisLenght;
 
-    [Range(1, 20)]
+    [Range(1, 100)]
     public int zAxisLenght;
 
     float step = 1;
@@ -21,7 +21,7 @@ public class Main : MonoBehaviour
 
     public int numBoids;
 
-    [Range(1f, 10f)]
+    [Range(1f, 20f)]
     public float maxVelocity;
 
     public GameObject prefab;
@@ -31,7 +31,7 @@ public class Main : MonoBehaviour
 
     /******************************/
 
-    const int CPT_MAX = 1000;
+    const int CPT_MAX = 10;
     int cpt = 0;
 
     void Start()
@@ -49,10 +49,6 @@ public class Main : MonoBehaviour
             foreach(GameObject go in this.boids)
             {
                 Boid b = go.GetComponent<Boid>();
-                //Vector3 new_velocity = b.getCurrentVelocity() * -1;
-                //b.setCurrentVelocity(new_velocity);
-
-
                 map.isInMap(b);
                 b.move();
             }
@@ -87,8 +83,8 @@ public class Main : MonoBehaviour
             float ry = Random.Range(0, this.yAxisLenght * step);
             float rz = Random.Range(0, this.zAxisLenght * step);
             Vector3 new_position = new Vector3(rx, ry, rz);
-            Debug.Log(new_position);
             GameObject go = Instantiate(prefab, new_position, Quaternion.identity);
+            go.transform.parent = transform;
             Boid b = go.GetComponent<Boid>();
             b.setMaxVelocity(maxVelocity);
             boids[i] = go;

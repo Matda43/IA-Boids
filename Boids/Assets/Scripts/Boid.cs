@@ -61,6 +61,15 @@ public class Boid : MonoBehaviour
 
     public void setCurrentVelocity(Vector3 new_velocity)
     {
+        /*
+        for(int i = 0; i < 3; i++)
+        {
+            if (new_velocity[i] > this.maxVelocity)
+            {
+                new_velocity[i] = this.maxVelocity;
+            }
+        }
+        */
         this.currentVelocity = new_velocity;
     }
 

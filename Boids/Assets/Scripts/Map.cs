@@ -48,45 +48,41 @@ public class Map
 
     public void isInMap(Boid boid)
     {
-        Vector3 v = Vector3.zero;
         Vector3 position = boid.transform.position;
         Vector3 velocity = boid.getCurrentVelocity();
-        Vector3 maxPosition = new Vector3(this.xAxisLenght, this.yAxisLenght, this.zAxisLenght) * this.step - this.center + this.parentCenter;
+        Vector3 maxPosition = this.center + this.parentCenter;
         Vector3 minPosition = this.parentCenter - this.center;
-        Debug.Log("Max " + maxPosition);
-        Debug.Log("Min " + minPosition);
 
-        if (position.x < minPosition.x && velocity.x <= 0)
-        {
-            Vector3 new_velocity = velocity + new Vector3(1, 0, 0) * Random.value;
-            boid.setCurrentVelocity(new_velocity);
-        }
-        if (position.x > maxPosition.x && velocity.x >= 0)
-        {
-            Vector3 new_velocity = velocity + new Vector3(-1, 0, 0) * Random.value;
-            boid.setCurrentVelocity(new_velocity);
-        }
+        Vector3 new_velocity = Vector3.zero;
 
-        if (position.y < minPosition.y && velocity.y <= 0)
+        Vector3 velocityNormalized = velocity.normalized;
+        float rx = Random.Range(0, 1) * velocityNormalized.x;
+        float ry = Random.Range(0, 1) * velocityNormalized.y;
+        float rz = Random.Range(0, 1) * velocityNormalized.z;
+
+        if (position.x < minPosition.x)
         {
-            Vector3 new_velocity = velocity + new Vector3(0, 1, 0) * Random.value;
-            boid.setCurrentVelocity(new_velocity);
-        }
-        if (position.y > maxPosition.y && velocity.y >= 0)
+            new_velocity += new Vector3(1, ry, rz) * 0.5f;
+        }else if (position.x > maxPosition.x)
         {
-            Vector3 new_velocity = velocity + new Vector3(0, -1, 0) * Random.value;
-            boid.setCurrentVelocity(new_velocity);
+            new_velocity += new Vector3(-1, rx, rz) * 0.5f;
         }
 
-        if (position.z < minPosition.z && velocity.z <= 0)
+        if (position.y < minPosition.y)
         {
-            Vector3 new_velocity = velocity + new Vector3(0, 0, 1) * Random.value;
-            boid.setCurrentVelocity(new_velocity);
-        }
-        if (position.z > maxPosition.z && velocity.z >= 0)
+            new_velocity += new Vector3(rx, 1, rz) * 0.5f;
+        }else if (position.y > maxPosition.y)
         {
-            Vector3 new_velocity = velocity + new Vector3(0, 0, -1) * Random.value;
-            boid.setCurrentVelocity(new_velocity);
+            new_velocity += new Vector3(rx, -1, rz) * 0.5f;
         }
+
+        if (position.z < minPosition.z)
+        {
+            new_velocity += new Vector3(rx, ry, 1) * 0.5f;
+        }else if (position.z > maxPosition.z)
+        {
+            new_velocity += new Vector3(rx, ry, -1) * 0.5f;
+        }
+        boid.setCurrentVelocity(velocity + new_velocity);
     }
 }

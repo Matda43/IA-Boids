@@ -12,6 +12,7 @@ public class BoidController : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         rigidbody.useGravity = false;
+        rigidbody.isKinematic = true;
     }
 
     public void Move(Vector3 _velocity)
