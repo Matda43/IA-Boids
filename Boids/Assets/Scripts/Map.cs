@@ -50,6 +50,47 @@ public class Map
 
     }
 
+
+    /*
+    Vector3 calculateNewVelocity(Vector3 velocity, Vector3 position, Vector3 minPosition, Vector3 maxPosition, float weight)
+    {
+        Vector3 velocityNormalized = velocity.normalized;
+        float rx = Random.Range(0, 1) * velocityNormalized.x;
+        float ry = Random.Range(0, 1) * velocityNormalized.y;
+        float rz = Random.Range(0, 1) * velocityNormalized.z;
+
+        Vector3 new_velocity = Vector3.zero;
+
+        if (position.x < minPosition.x)
+        {
+            new_velocity += new Vector3(Mathf.Pow(position.x - maxPosition.x, 2), ry, rz) * weight;
+        }
+        else if (position.x > maxPosition.x)
+        {
+            new_velocity += new Vector3(-Mathf.Pow(position.x - maxPosition.x, 2), rx, rz) * weight;
+        }
+
+        if (position.y < minPosition.y)
+        {
+            new_velocity += new Vector3(rx, Mathf.Pow(position.y - maxPosition.y, 2), rz) * weight;
+        }
+        else if (position.y > maxPosition.y)
+        {
+            new_velocity += new Vector3(rx, -Mathf.Pow(position.y - maxPosition.y, 2), rz) * weight;
+        }
+
+        if (position.z < minPosition.z)
+        {
+            new_velocity += new Vector3(rx, ry, Mathf.Pow(position.z - maxPosition.z, 2)) * weight;
+        }
+        else if (position.z > maxPosition.z)
+        {
+            new_velocity += new Vector3(rx, ry, -Mathf.Pow(position.z - maxPosition.z, 2)) * weight;
+        }
+        return new_velocity;
+    }
+    */
+
     public void isInMap(Boid boid, float weight)
     {
         Vector3 position = boid.transform.position;
@@ -57,9 +98,9 @@ public class Map
         Vector3 maxPosition = this.center + this.parentCenter;
         Vector3 minPosition = this.parentCenter - this.center;
 
+        Vector3 velocityNormalized = velocity.normalized;
         Vector3 new_velocity = Vector3.zero;
 
-        Vector3 velocityNormalized = velocity.normalized;
         float rx = Random.Range(0, 1) * velocityNormalized.x;
         float ry = Random.Range(0, 1) * velocityNormalized.y;
         float rz = Random.Range(0, 1) * velocityNormalized.z;
@@ -87,6 +128,9 @@ public class Map
         {
             new_velocity += new Vector3(rx, ry, -1) * weight;
         }
+        
+
+        //Vector3 new_velocity = calculateNewVelocity(velocity, position, minPosition, maxPosition, weight);
         boid.setCurrentVelocity(velocity + new_velocity);
     }
 }

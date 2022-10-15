@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(BoidController))]
@@ -15,12 +16,17 @@ public class Boid : MonoBehaviour
     void Start()
     {
         this.controller = GetComponent<BoidController>();
+
     }
 
     void Update()
     {
         if (this.ctpIsPassed())
         {
+            if(this.currentVelocity.magnitude > this.maxVelocity)
+            {
+                this.currentVelocity = this.currentVelocity.normalized * this.maxVelocity;
+            }
             controller.Move(this.currentVelocity);
             resetCpt();
         }
@@ -126,39 +132,41 @@ public class Boid : MonoBehaviour
         int numClose = 0;
         foreach (Boid boid in boids)
         {
-            float distance = this.distance(boid);
+            float distance = this.distance(boid) - 6;
             if(distance < minDistance)
             {
                 numClose++;
                 float xDiff = this.transform.position.x - boid.transform.position.x;
                 float yDiff = this.transform.position.y - boid.transform.position.y;
                 float zDiff = this.transform.position.z - boid.transform.position.z;
-                
-                if(xDiff >= 0)
+
+                float coef = 1;
+
+                if (xDiff >= 0)
                 {
-                    xDiff = Mathf.Sqrt(minDistance) - xDiff;
+                    xDiff = Mathf.Sqrt(minDistance) - xDiff * coef;
                 }
                 else
                 {
-                    xDiff = -Mathf.Sqrt(minDistance) - xDiff;
+                    xDiff = -Mathf.Sqrt(minDistance) - xDiff * coef;
                 }
 
                 if (yDiff >= 0)
                 {
-                    yDiff = Mathf.Sqrt(minDistance) - yDiff;
+                    yDiff = Mathf.Sqrt(minDistance) - yDiff * coef;
                 }
                 else
                 {
-                    yDiff = -Mathf.Sqrt(minDistance) - yDiff;
+                    yDiff = -Mathf.Sqrt(minDistance) - yDiff * coef;
                 }
 
                 if (zDiff >= 0)
                 {
-                    zDiff = Mathf.Sqrt(minDistance) - zDiff;
+                    zDiff = Mathf.Sqrt(minDistance) - zDiff * coef;
                 }
                 else
                 {
-                    zDiff = -Mathf.Sqrt(minDistance) - zDiff;
+                    zDiff = -Mathf.Sqrt(minDistance) - zDiff * coef;
                 }
                 distances += new Vector3(xDiff, yDiff, zDiff);
             }
