@@ -6,12 +6,15 @@ public class Main : MonoBehaviour
 {
     [Range(1,100)]
     public int xAxisLenght;
+    int xAxisLenghtRemember;
 
     [Range(1, 100)]
     public int yAxisLenght;
+    int yAxisLenghtRemember;
 
     [Range(1, 100)]
     public int zAxisLenght;
+    int zAxisLenghtRemember;
 
     float step = 1;
 
@@ -21,11 +24,11 @@ public class Main : MonoBehaviour
 
     public int numBoids;
 
-    [Range(1f, 20f)]
+    [Range(1f, 100f)]
     public float maxVelocity;
     float maxVelocityRemember;
 
-    [Range(0f, 2f)]
+    [Range(2f, 10f)]
     public float weight;
 
     [Range(1f, 100f)]
@@ -39,6 +42,9 @@ public class Main : MonoBehaviour
 
     [Range(1f, 20f)]
     public float minDistance;
+
+    [Range(1f, 20f)]
+    public float distance_to_close;
 
     public GameObject prefab;
 
@@ -57,6 +63,9 @@ public class Main : MonoBehaviour
         generateBoids(numBoids, prefab, maxVelocity);
 
         this.maxVelocityRemember = maxVelocity;
+        this.xAxisLenghtRemember = xAxisLenght;
+        this.yAxisLenghtRemember = yAxisLenght;
+        this.zAxisLenghtRemember = zAxisLenght;
     }
 
 
@@ -64,6 +73,8 @@ public class Main : MonoBehaviour
     {
         if (this.ctpIsPassed())
         {
+            checkIfAxisLengthChange();
+
             if (maxVelocityRemember != maxVelocity)
             {
                 foreach (GameObject go in this.boids)
@@ -85,7 +96,7 @@ public class Main : MonoBehaviour
                     {
                         Boid otherBoid = otherGo.GetComponent<Boid>();
                         float distance = boid.distance(otherBoid);
-                        if(distance < 4)
+                        if(distance < distance_to_close)
                         {
                             closeBoids.Add(otherBoid);
                         }
@@ -119,6 +130,25 @@ public class Main : MonoBehaviour
     void resetCpt()
     {
         this.cpt = 0;
+    }
+
+    void checkIfAxisLengthChange()
+    {
+        if (xAxisLenghtRemember != xAxisLenght)
+        {
+            this.map.setXAxisLength(xAxisLenght);
+            xAxisLenghtRemember = xAxisLenght;
+        }
+        if (yAxisLenghtRemember != yAxisLenght)
+        {
+            this.map.setYAxisLength(yAxisLenght);
+            yAxisLenghtRemember = yAxisLenght;
+        }
+        if (zAxisLenghtRemember != zAxisLenght)
+        {
+            this.map.setZAxisLength(zAxisLenght);
+            zAxisLenghtRemember = zAxisLenght;
+        }
     }
 
     void generateBoids(int numBoids, GameObject prefab, float maxVelocity)

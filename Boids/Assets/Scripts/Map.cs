@@ -32,6 +32,24 @@ public class Map
         return new Vector3(xAxisLenght / 2, yAxisLenght / 2, zAxisLenght / 2) * step;
     }
 
+    public void setXAxisLength(int new_xAxisLength)
+    {
+        this.xAxisLenght = new_xAxisLength;
+        this.center = getCenter(xAxisLenght, yAxisLenght, zAxisLenght, step);
+    }
+
+    public void setYAxisLength(int new_yAxisLength)
+    {
+        this.yAxisLenght = new_yAxisLength;
+        this.center = getCenter(xAxisLenght, yAxisLenght, zAxisLenght, step);
+    }
+
+    public void setZAxisLength(int new_zAxisLength)
+    {
+        this.zAxisLenght = new_zAxisLength;
+        this.center = getCenter(xAxisLenght, yAxisLenght, zAxisLenght, step);
+    }
+
     void generateMap()
     {
         for(int i = 0; i < this.xAxisLenght; i++)
@@ -40,7 +58,7 @@ public class Map
             {
                 for (int k = 0; k < this.zAxisLenght; k++)
                 {
-                    this.positions[i, j, k] = new Vector3((float)i, (float)j, (float)k) * step - this.center + this.parentCenter;
+                    //this.positions[i, j, k] = new Vector3((float)i, (float)j, (float)k) * step - this.center + this.parentCenter;
                 }
             }
         }
@@ -49,47 +67,6 @@ public class Map
         go.transform.localScale = new Vector3(this.xAxisLenght, 1, this.zAxisLenght) * step;
 
     }
-
-
-    /*
-    Vector3 calculateNewVelocity(Vector3 velocity, Vector3 position, Vector3 minPosition, Vector3 maxPosition, float weight)
-    {
-        Vector3 velocityNormalized = velocity.normalized;
-        float rx = Random.Range(0, 1) * velocityNormalized.x;
-        float ry = Random.Range(0, 1) * velocityNormalized.y;
-        float rz = Random.Range(0, 1) * velocityNormalized.z;
-
-        Vector3 new_velocity = Vector3.zero;
-
-        if (position.x < minPosition.x)
-        {
-            new_velocity += new Vector3(Mathf.Pow(position.x - maxPosition.x, 2), ry, rz) * weight;
-        }
-        else if (position.x > maxPosition.x)
-        {
-            new_velocity += new Vector3(-Mathf.Pow(position.x - maxPosition.x, 2), rx, rz) * weight;
-        }
-
-        if (position.y < minPosition.y)
-        {
-            new_velocity += new Vector3(rx, Mathf.Pow(position.y - maxPosition.y, 2), rz) * weight;
-        }
-        else if (position.y > maxPosition.y)
-        {
-            new_velocity += new Vector3(rx, -Mathf.Pow(position.y - maxPosition.y, 2), rz) * weight;
-        }
-
-        if (position.z < minPosition.z)
-        {
-            new_velocity += new Vector3(rx, ry, Mathf.Pow(position.z - maxPosition.z, 2)) * weight;
-        }
-        else if (position.z > maxPosition.z)
-        {
-            new_velocity += new Vector3(rx, ry, -Mathf.Pow(position.z - maxPosition.z, 2)) * weight;
-        }
-        return new_velocity;
-    }
-    */
 
     public void isInMap(Boid boid, float weight)
     {
@@ -110,7 +87,7 @@ public class Map
             new_velocity += new Vector3(1, ry, rz) * weight;
         }else if (position.x > maxPosition.x)
         {
-            new_velocity += new Vector3(-1, rx, rz) * weight;
+            new_velocity += new Vector3(-1, ry, rz) * weight;
         }
 
         if (position.y < minPosition.y)
@@ -128,9 +105,7 @@ public class Map
         {
             new_velocity += new Vector3(rx, ry, -1) * weight;
         }
-        
 
-        //Vector3 new_velocity = calculateNewVelocity(velocity, position, minPosition, maxPosition, weight);
         boid.setCurrentVelocity(velocity + new_velocity);
     }
 }

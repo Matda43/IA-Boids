@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(BoidController))]
 public class Boid : MonoBehaviour
@@ -23,11 +25,7 @@ public class Boid : MonoBehaviour
     {
         if (this.ctpIsPassed())
         {
-            if(this.currentVelocity.magnitude > this.maxVelocity)
-            {
-                this.currentVelocity = this.currentVelocity.normalized * this.maxVelocity;
-            }
-            controller.Move(this.currentVelocity);
+            //controller.Move(this.currentVelocity);
             resetCpt();
         }
         else
@@ -67,15 +65,6 @@ public class Boid : MonoBehaviour
 
     public void setCurrentVelocity(Vector3 new_velocity)
     {
-        /*
-        for(int i = 0; i < 3; i++)
-        {
-            if (new_velocity[i] > this.maxVelocity)
-            {
-                new_velocity[i] = this.maxVelocity;
-            }
-        }
-        */
         this.currentVelocity = new_velocity;
     }
 
@@ -104,7 +93,7 @@ public class Boid : MonoBehaviour
             }
         }
         avgs /= boids.Count;
-        Vector3 new_velocity = this.getCurrentVelocity() - avgs / param;
+        Vector3 new_velocity = this.getCurrentVelocity() - (avgs / param);
         this.setCurrentVelocity(new_velocity);
     }
 
@@ -119,7 +108,7 @@ public class Boid : MonoBehaviour
             avgs += boid.getCurrentVelocity();
         }
         avgs /= boids.Count;
-        Vector3 new_velocity = this.getCurrentVelocity() + avgs / param;
+        Vector3 new_velocity = this.getCurrentVelocity() + (avgs / param);
         this.setCurrentVelocity(new_velocity);
     }
 
@@ -132,7 +121,7 @@ public class Boid : MonoBehaviour
         int numClose = 0;
         foreach (Boid boid in boids)
         {
-            float distance = this.distance(boid) - 6;
+            float distance = this.distance(boid);
             if(distance < minDistance)
             {
                 numClose++;
@@ -140,40 +129,38 @@ public class Boid : MonoBehaviour
                 float yDiff = this.transform.position.y - boid.transform.position.y;
                 float zDiff = this.transform.position.z - boid.transform.position.z;
 
-                float coef = 1;
-
                 if (xDiff >= 0)
                 {
-                    xDiff = Mathf.Sqrt(minDistance) - xDiff * coef;
+                    xDiff = Mathf.Sqrt(minDistance) - xDiff;
                 }
                 else
                 {
-                    xDiff = -Mathf.Sqrt(minDistance) - xDiff * coef;
+                    xDiff = -Mathf.Sqrt(minDistance) - xDiff;
                 }
 
                 if (yDiff >= 0)
                 {
-                    yDiff = Mathf.Sqrt(minDistance) - yDiff * coef;
+                    yDiff = Mathf.Sqrt(minDistance) - yDiff;
                 }
                 else
                 {
-                    yDiff = -Mathf.Sqrt(minDistance) - yDiff * coef;
+                    yDiff = -Mathf.Sqrt(minDistance) - yDiff;
                 }
 
                 if (zDiff >= 0)
                 {
-                    zDiff = Mathf.Sqrt(minDistance) - zDiff * coef;
+                    zDiff = Mathf.Sqrt(minDistance) - zDiff;
                 }
                 else
                 {
-                    zDiff = -Mathf.Sqrt(minDistance) - zDiff * coef;
+                    zDiff = -Mathf.Sqrt(minDistance) - zDiff;
                 }
                 distances += new Vector3(xDiff, yDiff, zDiff);
             }
         }
         if(numClose > 0)
         {
-            Vector3 new_velocity = this.getCurrentVelocity() - distances / param;
+            Vector3 new_velocity = this.getCurrentVelocity() - (distances / param);
             this.setCurrentVelocity(new_velocity);
         }
     }
@@ -192,8 +179,11 @@ public class Boid : MonoBehaviour
         if (rx || ry || rz)
         {
             float scaleFactor = maxVelocity / Mathf.Max(Mathf.Abs(currentVelocity.x), Mathf.Max(Mathf.Abs(currentVelocity.y), Mathf.Abs(currentVelocity.z)));
-            Vector3 new_velocity = this.getCurrentVelocity() * scaleFactor;
+            Vector3 new_velocity = currentVelocity * scaleFactor;
             this.setCurrentVelocity(new_velocity);
         }
+
+        controller.Move(this.currentVelocity);
+
     }
 }

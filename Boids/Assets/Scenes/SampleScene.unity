@@ -152,16 +152,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4030a411abf1894b99f82d25bf1dd15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xAxisLenght: 10
-  yAxisLenght: 10
-  zAxisLenght: 10
+  xAxisLenght: 20
+  yAxisLenght: 20
+  zAxisLenght: 20
   numBoids: 100
   maxVelocity: 20
   weight: 2
   moveCloser: 100
-  moveWith: 100
-  moveAway: 100
+  moveWith: 40
+  moveAway: 20
   minDistance: 20
+  distance_to_close: 8.5
   prefab: {fileID: 578111771492495508, guid: 1a883614a2e1a3942bf39887305b4bac, type: 3}
 --- !u!4 &25821182
 Transform:
