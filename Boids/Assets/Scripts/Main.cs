@@ -4,19 +4,9 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
-    [Range(1,100)]
-    public int xAxisLenght;
-    int xAxisLenghtRemember;
-
-    [Range(1, 100)]
-    public int yAxisLenght;
-    int yAxisLenghtRemember;
-
-    [Range(1, 100)]
-    public int zAxisLenght;
-    int zAxisLenghtRemember;
-
-    float step = 1;
+    [Range(10f,100f)]
+    public float radius;
+    float radiusRemember;
 
     Map map;
 
@@ -24,8 +14,11 @@ public class Main : MonoBehaviour
 
     public int numBoids;
 
-    [Range(1f, 100f)]
+    [Range(10f, 100f)]
     public float maxVelocity;
+
+    float minVelocity = 10;
+
     float maxVelocityRemember;
 
     [Range(2f, 10f)]
@@ -59,13 +52,11 @@ public class Main : MonoBehaviour
     void Start()
     {
         this.boids = new GameObject[numBoids];
-        this.map = new Map(xAxisLenght, yAxisLenght, zAxisLenght, step, transform.position);
-        generateBoids(numBoids, prefab, maxVelocity);
+        this.map = new Map(radius, transform.position);
+        generateBoids(numBoids, prefab, maxVelocity, minVelocity);
 
         this.maxVelocityRemember = maxVelocity;
-        this.xAxisLenghtRemember = xAxisLenght;
-        this.yAxisLenghtRemember = yAxisLenght;
-        this.zAxisLenghtRemember = zAxisLenght;
+        this.radiusRemember = radius;
     }
 
 
@@ -73,7 +64,10 @@ public class Main : MonoBehaviour
     {
         if (this.ctpIsPassed())
         {
-            checkIfAxisLengthChange();
+            if (radiusRemember != radius)
+            {
+                this.map.setRadius(radius);
+            }
 
             if (maxVelocityRemember != maxVelocity)
             {
@@ -132,34 +126,12 @@ public class Main : MonoBehaviour
         this.cpt = 0;
     }
 
-    void checkIfAxisLengthChange()
-    {
-        if (xAxisLenghtRemember != xAxisLenght)
-        {
-            this.map.setXAxisLength(xAxisLenght);
-            xAxisLenghtRemember = xAxisLenght;
-        }
-        if (yAxisLenghtRemember != yAxisLenght)
-        {
-            this.map.setYAxisLength(yAxisLenght);
-            yAxisLenghtRemember = yAxisLenght;
-        }
-        if (zAxisLenghtRemember != zAxisLenght)
-        {
-            this.map.setZAxisLength(zAxisLenght);
-            zAxisLenghtRemember = zAxisLenght;
-        }
-    }
-
-    void generateBoids(int numBoids, GameObject prefab, float maxVelocity)
+    void generateBoids(int numBoids, GameObject prefab, float maxVelocity, float minVelocity)
     {
         for(int i = 0; i < numBoids; i++)
         {
-            float rx = Random.Range(0, this.xAxisLenght * step);
-            float ry = Random.Range(0, this.yAxisLenght * step);
-            float rz = Random.Range(0, this.zAxisLenght * step);
-            Vector3 new_position = new Vector3(rx, ry, rz);
-            GameObject go = Instantiate(prefab, new_position, Quaternion.identity);
+            Vector3 randomPosition = Random.onUnitSphere * radius;
+            GameObject go = Instantiate(prefab, randomPosition, Quaternion.identity);
             go.transform.parent = transform;
             Boid b = go.GetComponent<Boid>();
             b.setMaxVelocity(maxVelocity);

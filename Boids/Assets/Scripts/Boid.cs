@@ -8,7 +8,8 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(BoidController))]
 public class Boid : MonoBehaviour
 {
-    private float maxVelocity = 0;
+    private float maxVelocity = 1;
+    private float minVelocity = 1;
     private Vector3 currentVelocity = Vector3.zero;
     const int CPT_MAX = 100;
     int cpt = 0;
@@ -51,15 +52,33 @@ public class Boid : MonoBehaviour
 
     public void setMaxVelocity(float new_maxVelocity)
     {
-        this.maxVelocity = new_maxVelocity;
-        this.updateCurrentVelocity(new_maxVelocity);
+        if (new_maxVelocity < minVelocity)
+        {
+            this.maxVelocity = minVelocity;
+        }
+        else
+        {
+            this.maxVelocity = new_maxVelocity;
+        }
     }
 
-    void updateCurrentVelocity(float new_maxVelocity)
+    public void setMinVelocity(float new_minVelocity)
     {
-        float rx = Random.Range(1, new_maxVelocity);
-        float ry = Random.Range(1, new_maxVelocity);
-        float rz = Random.Range(1, new_maxVelocity);
+        if (new_minVelocity > maxVelocity)
+        {
+            this.minVelocity = maxVelocity;
+        }
+        else
+        {
+            this.minVelocity = new_minVelocity;   
+        }
+    }
+
+    void updateCurrentVelocity()
+    {
+        float rx = Random.Range(minVelocity, maxVelocity);
+        float ry = Random.Range(minVelocity, maxVelocity);
+        float rz = Random.Range(minVelocity, maxVelocity);
         this.setCurrentVelocity(new Vector3(rx, ry, rz));
     }
 
@@ -180,6 +199,7 @@ public class Boid : MonoBehaviour
         {
             float scaleFactor = maxVelocity / Mathf.Max(Mathf.Abs(currentVelocity.x), Mathf.Max(Mathf.Abs(currentVelocity.y), Mathf.Abs(currentVelocity.z)));
             Vector3 new_velocity = currentVelocity * scaleFactor;
+            
             this.setCurrentVelocity(new_velocity);
         }
 
