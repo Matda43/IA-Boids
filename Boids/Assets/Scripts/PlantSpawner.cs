@@ -80,7 +80,7 @@ public class PlantSpawner : MonoBehaviour
             foreach (GameObject go in plants)
             {
                 Plant plant = go.GetComponent<Plant>();
-                bool res = PointInSphere(plant.getCenter(), position, plant.getRadius());
+                bool res = PointInSphere(plant.getCenter(), position, 3);
                 if (res)
                 {
                     return plant;
